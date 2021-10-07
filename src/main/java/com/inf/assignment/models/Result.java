@@ -15,10 +15,15 @@ public class Result {
 	 * variable used to keep the sum
 	 */
 	private int sum;
+	
 	/**
 	 * variable used to keep the average 
 	 */
 	private float average;
+	
+	/**
+	 * variable user to keep the elements greater than the average
+	 */
 	private Object[] greaterThanAverage;
 
 }
