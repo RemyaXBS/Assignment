@@ -14,7 +14,7 @@ public class OperationService {
 
 	/**
 	 * @param request
-	 * @return
+	 * @returns Result
 	 * @throws Exception
 	 */
 	public Result getResults(Request request) throws Exception {
@@ -31,11 +31,13 @@ public class OperationService {
 			if (!(request.getInput()[i] instanceof Integer))
 				throw new Exception("Numeric input expected, received invalid numbers in input");
 		}
+		
+		List<Object>inputList = Arrays.asList(request.getInput());	
 		result = Result.builder()
-				.sum(findSum(request))
+				.sum(findSum(inputList))
 				.build();
 		result.setAverage( result.getSum() / request.getInput().length );
-		result.setGreaterThanAverage(findGreaterThanNumbers(request, result.getAverage()));
+		result.setGreaterThanAverage(findGreaterThanNumbers(inputList, result.getAverage()));
 		return result;
 	}
 	
@@ -44,12 +46,9 @@ public class OperationService {
 	 * @param request
 	 * @return
 	 */
-	private int findSum(Request request) {
-		int sum = 0;
-		for (int i = 0; i < request.getInput().length; i++) {
-			sum = sum + Integer.parseInt( request.getInput()[i].toString() );
-		}		
-		return sum;
+	private int findSum(List<Object> inputObjects) {
+		return inputObjects.stream()
+				.mapToInt(i -> Integer.parseInt(i.toString())).sum();
 	}
 		
 	/**
@@ -57,9 +56,9 @@ public class OperationService {
 	 * @param results
 	 * @ returns the updated Results object
 	 */
-	private Object[] findGreaterThanNumbers(Request request, float average) {
-		List<Object> list = Arrays.asList(request.getInput());		
-		return list.stream()
+	private Object[] findGreaterThanNumbers(List<Object> inputObjects, float average) {
+			
+		return inputObjects.stream()
 				.map(i->Integer.parseInt(i.toString()))
 				.filter(i->i>average).collect(Collectors.toList()).toArray();
 	}
